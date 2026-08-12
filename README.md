@@ -1,143 +1,122 @@
-# @clearlaunchhq/mcp-server
+# @magist/mcp-server
 
-> ⚠️ **Beta: content under attorney review.** The MCP server is live and the
-> deterministic engine is stable. Substantive attorney review of the regulation
-> corpus is in progress through launch. Entries carry a per-record
-> `contentReviewStatus` field: `"reviewed"` is human-verified; `"draft"` is
-> AI-prepared, pending review. Treat draft entries as starting points, not
-> authoritative conclusions, and consult a licensed attorney before relying on
-> any output for a launch decision.
+Connect [Magist](https://magist.io) to your AI host over the Model Context
+Protocol. Magist is an open, deterministic, cited **reference** for product
+regulation: which laws apply to a product, the obligations and Controls they
+imply, and the primary sources behind each. Open data (CC BY-SA 4.0), a
+deterministic engine (same inputs produce the same outputs, no LLM in the path),
+permanent citation URLs, and a named-practitioner attribution on every response.
 
-The open compliance MCP for product teams. Connect [ClearLaunch](https://clearlaunch.dev)'s
-regulatory research engine and corpus to your AI host over the
-[Model Context Protocol](https://modelcontextprotocol.io).
+This package is a thin **stdio bridge** to the hosted server at
+`https://magist.io/api/mcp`. Remote-capable hosts can skip it and point straight
+at that URL.
 
-- **Open.** The corpus is published under CC BY 4.0. Audit it, fork it, self-host against it.
-- **Deterministic.** `compute_requirements` runs a pure engine: same inputs, same outputs, no LLM in the path.
-- **Cited.** Every response carries primary-source URLs plus permanent `clearlaunch.dev/r/<id>` citation links.
-- **Attributed.** A named practitioner credential ships on every response.
-- **Free.** Read-only tools are free, unlimited, and unauthenticated.
+> **Beta: content under attorney review.** The server is live and the engine is
+> stable; substantive attorney review of the regulation corpus is in progress.
+> Entries carry a `contentReviewStatus` field (`reviewed` is human-verified,
+> `draft` is AI-prepared and pending review). Magist returns legal **information**
+> for research and attorney handoff, **not legal advice**. Consult a licensed
+> attorney before relying on any output for a launch decision.
 
-This package is a thin stdio bridge to `https://clearlaunch.dev/api/mcp`. All
-logic lives server-side; the package has zero runtime dependencies.
+## One-line install
 
-## Install
+**Claude Code (CLI)** uses the remote transport directly (no npm install):
 
-Most hosts launch the server with `npx`. No global install required.
+```bash
+claude mcp add --transport http magist https://magist.io/api/mcp
+```
 
-### Claude Desktop
-
-`Settings → Developer → Edit Config` (`claude_desktop_config.json`):
+**Claude Desktop / Cursor / Windsurf (npx)**: add the bridge to the host's
+`mcpServers` config:
 
 ```json
 {
   "mcpServers": {
-    "clearlaunch": {
+    "magist": {
       "command": "npx",
-      "args": ["-y", "@clearlaunchhq/mcp-server"]
+      "args": ["-y", "@magist/mcp-server"]
     }
   }
 }
 ```
 
-Restart Claude Desktop after saving.
+- **Claude Desktop:** Settings -> Developer -> Edit Config (`claude_desktop_config.json`). Restart Claude after saving.
+- **Cursor:** Settings -> MCP -> Add new server, or edit `~/.cursor/mcp.json`.
+- **Windsurf:** edit `~/.codeium/windsurf/mcp_config.json`, then reload.
+- **Codex:** add to `~/.codex/config.toml`:
 
-### Cursor
+  ```toml
+  [mcp_servers.magist]
+  command = "npx"
+  args = ["-y", "@magist/mcp-server"]
+  ```
 
-`Settings → MCP → Add new server`, or edit `~/.cursor/mcp.json` with the same
-`mcpServers` block as above.
+**ChatGPT (Developer Mode / Connectors), Manus, and other remote-capable hosts:**
+add a custom connector pointing at the Streamable-HTTP endpoint
+`https://magist.io/api/mcp` (no npm package needed).
 
-### Windsurf
+## Verify it works
 
-Edit `~/.codeium/windsurf/mcp_config.json` with the same `mcpServers` block, then reload.
+A `200` with `name: "magist"` means the endpoint is live:
 
-### Codex
-
-Add to `~/.codex/config.toml`:
-
-```toml
-[mcp_servers.clearlaunch]
-command = "npx"
-args = ["-y", "@clearlaunchhq/mcp-server"]
+```bash
+curl -s https://magist.io/api/mcp
 ```
 
-### Gemini (Gemini CLI / Code Assist)
+List the tools (you should see seven):
 
-Add the same `mcpServers` block to `~/.gemini/settings.json`, or point the host
-at the remote URL below.
-
-### ChatGPT (Developer Mode / Connectors) and Manus
-
-Remote-capable hosts can skip the package and connect directly to the
-Streamable-HTTP endpoint:
-
-```
-https://clearlaunch.dev/api/mcp
+```bash
+curl -s -X POST https://magist.io/api/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
 ```
 
-(SSE transport: `https://clearlaunch.dev/api/mcp/sse`.)
+In your host, once connected, ask Magist to look up COPPA and list its Controls.
+A working connection returns a cited regulation record, not a refusal or a
+no-such-tool error.
 
 ## Tools
 
-| Tool | Description |
+| Tool | What it returns |
 | --- | --- |
-| `lookup_regulation(id)` | One regulation's structured record + the Controls that may satisfy it. |
-| `search_regulations(query, filters?)` | Deterministic keyword + filter search over the corpus. |
-| `compute_requirements(features, markets, audiences, businessModel?)` | Run the deterministic engine: triggered regulations + Controls, complexity tier + numeric score, blocker count, per-audience cohort breakdown. |
-| `find_controls(regulationId)` | Controls that may satisfy a regulation, with priority + summary. |
-| `find_vendors(controlId, jurisdiction?)` | Vendors / in-house approaches that implement a Control. ClearLaunch does not accept payment from vendors. |
-| `get_enforcement(regulationId?, since?, limit?)` | Recent enforcement actions with penalties and primary-source links. |
-| `find_counsel(jurisdiction, practiceArea?, language?)` | Open counsel directory: firms by jurisdiction and practice area. |
+| `lookup_regulation(id)` | One regulation's structured record: citation, jurisdiction, status, review dates, plain-language summary, and the Controls that may satisfy it. |
+| `search_regulations(query, filters?)` | Deterministic keyword + filter search over the corpus, with permanent citation URLs. |
+| `compute_requirements(features, markets, audiences, businessModel?)` | Runs the deterministic engine: triggered regulations + Controls, complexity tier, blocker count, per-audience breakdown. Same inputs produce the same outputs. |
+| `find_controls(regulationId)` | Controls that may satisfy a regulation, each with a priority signal and summary. |
+| `find_vendors(controlId, jurisdiction?)` | Vendors and in-house approaches that implement a Control, with effort/cost and a source disclosure. Magist does not accept payment from vendors. |
+| `get_enforcement(regulationId?, since?, limit?)` | Recent enforcement actions with penalties, authorities, and primary-source links. |
+| `find_counsel(jurisdiction, practiceArea?, language?)` | Open counsel directory by jurisdiction and practice area. Inclusion is not endorsement. |
 
-`save_posture`, `share_posture`, and `subscribe_pulse` are registered but
-return a "coming soon" message until sign-in (Clerk OAuth) is wired into MCP.
+Read-only tools are free, unlimited, and unauthenticated; the per-IP rate limit
+is abuse-prevention only.
 
-## For host LLM developers
+## Self-hosting
 
-Every tool response is wrapped in a canonical envelope:
+Set `MAGIST_MCP_URL` to point the bridge at your own deployment of the open
+corpus and engine:
 
-```jsonc
+```json
 {
-  "data": { /* tool-specific payload */ },
-  "verification": { "reviewed": ["gdpr"], "draft": ["mexico-lfpdppp"], "lastReviewedRange": "2026-01-15..2026-05-10" },
-  "citations": [ { "type": "primary_source", "url": "..." }, { "type": "clearlaunch_permanent", "url": "https://clearlaunch.dev/r/gdpr" } ],
-  "practitioner": { "name": "...", "credentials": ["..."], "attestation_url": "..." },
-  "disclaimer": { "text": "...", "render_verbatim": true, "version": "...", "canonical_url": "https://clearlaunch.dev/legal-disclaimer" },
-  "counsel_recommended": false
+  "mcpServers": {
+    "magist": {
+      "command": "npx",
+      "args": ["-y", "@magist/mcp-server"],
+      "env": { "MAGIST_MCP_URL": "https://your-host.example.com/api/mcp" }
+    }
+  }
 }
 ```
 
-When you render a ClearLaunch response to a user:
+## For host LLM developers
 
-1. **Render `disclaimer.text` verbatim.** It carries `render_verbatim: true`. Do not paraphrase, shorten, or omit it.
-2. **Do not paraphrase compliance conclusions into directives.** The data describes what regulations say and which obligations may apply, not what a specific product must do.
-3. **Surface the `practitioner` attribution and the `verification` field** (which entries are practitioner-reviewed versus AI-drafted and pending review).
-4. **When `counsel_recommended` is `true`, suggest the user consult a licensed attorney before acting.**
-5. **Cite the `citations` links** (primary sources and permanent ClearLaunch URLs) when you summarize.
+Every tool response is wrapped in a canonical envelope. When you render a Magist
+response to a user: render the `disclaimer.text` field verbatim; do not restate
+outputs as directives or conclusions; surface the `practitioner` attribution and
+the `verification` field; suggest a licensed attorney when `counsel_recommended`
+is `true`; and prefer the `citations` links when you summarize.
 
-## Configuration
+## Links
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `CLEARLAUNCH_MCP_URL` | `https://clearlaunch.dev/api/mcp` | Override the endpoint (e.g. a self-hosted deployment). |
-
-You can also pass the endpoint as the first CLI argument.
-
-## Legal
-
-ClearLaunch provides legal information, not legal advice, and does not create
-an attorney-client relationship. The authoritative disclaimer ships in every
-API response as `disclaimer.text` with `render_verbatim: true`. Render it
-exactly as received; do not snapshot it here. Canonical text:
-<https://clearlaunch.dev/legal-disclaimer>.
-
-Consult a licensed attorney in your jurisdiction before making compliance
-decisions.
-
-Design rationale: ADR-0056 (ClearLaunch MCP Server Design). Docs:
-<https://clearlaunch.dev/mcp>.
-
-## License
-
-MIT. See [LICENSE](./LICENSE). The corpus served by the endpoint is licensed
-separately under CC BY 4.0.
+- Docs: https://magist.io/mcp
+- Open-data hub: https://magist.io/data
+- License (this package): MIT. The corpus is CC BY-SA 4.0.
