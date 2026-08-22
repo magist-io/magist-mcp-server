@@ -1,6 +1,7 @@
 {
   "name": "@magist/mcp-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "mcpName": "io.github.magist-io/magist",
   "description": "Thin stdio bridge to the hosted Magist MCP server: open, deterministic, cited regulatory research for product launches. Returns legal information for research and attorney handoff, not legal advice.",
   "type": "module",
   "bin": {

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.magist-io/magist",
+  "title": "Magist",
+  "description": "Deterministic, cited regulatory research for product launches; legal information, not legal advice.",
+  "repository": {
+    "url": "https://github.com/magist-io/magist-mcp-server",
+    "source": "github"
+  },
+  "version": "0.1.1",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://magist.io/api/mcp"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@magist/mcp-server",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

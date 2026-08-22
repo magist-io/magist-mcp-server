@@ -63,7 +63,7 @@ A `200` with `name: "magist"` means the endpoint is live:
 curl -s https://magist.io/api/mcp
 ```
 
-List the tools (you should see seven):
+List the tools (you should see nine):
 
 ```bash
 curl -s -X POST https://magist.io/api/mcp \
@@ -86,6 +86,8 @@ no-such-tool error.
 | `find_vendors(controlId, jurisdiction?)` | Vendors and in-house approaches that implement a Control, with effort/cost and a source disclosure. Magist does not accept payment from vendors. |
 | `get_enforcement(regulationId?, since?, limit?)` | Recent enforcement actions with penalties, authorities, and primary-source links. |
 | `find_counsel(jurisdiction, practiceArea?, language?)` | Open counsel directory by jurisdiction and practice area. Inclusion is not endorsement. |
+| `list_feature_catalog()` | The closed feature, market, and audience identifiers accepted by `compute_requirements`, so agents can validate inputs before analysis. |
+| `verify_ai_answer(token)` | Verifies a signed Magist grounding-proof token from the REST API. It proves what Magist served, not legal correctness or applicability. |
 
 Read-only tools are free, unlimited, and unauthenticated; the per-IP rate limit
 is abuse-prevention only.
