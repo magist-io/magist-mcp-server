@@ -1,0 +1,42 @@
+name: Portable plugin package
+
+on:
+  pull_request:
+    paths:
+      - LICENSE
+      - plugin.json
+      - mcp.json
+      - skills/**
+      - scripts/package-plugin.py
+      - tests/plugin-package.test.py
+      - .github/workflows/plugin-package.yml
+  push:
+    branches: [main]
+    paths:
+      - LICENSE
+      - plugin.json
+      - mcp.json
+      - skills/**
+      - scripts/package-plugin.py
+      - tests/plugin-package.test.py
+      - .github/workflows/plugin-package.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: plugin-package-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Test package boundaries and reproducibility
+        run: python3 tests/plugin-package.test.py
+      - name: Build and verify the allowlisted ZIP
+        run: python3 scripts/package-plugin.py --output "$RUNNER_TEMP/magist-research.zip"
