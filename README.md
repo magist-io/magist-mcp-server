@@ -18,6 +18,13 @@ plugin: root `plugin.json`, the remote connection in `mcp.json`, and a newly
 authored workflow in `skills/magist-research/`. It connects directly to the
 public HTTPS service and does not run the npm stdio bridge.
 
+The portable connection uses only `type` and `url`, as allowed by the
+[Agent Plugins 1.0.0 MCP schema](https://agent-plugins.org/schemas/1.0.0/mcp.schema.json).
+The endpoint requires no authentication. The schema does not admit the
+server-level authentication extensions shown in some host-specific examples;
+those extensions are omitted here. Schema validation alone does not establish
+that a host can install and run the complete plugin.
+
 Create its bounded source package with Python 3.9 or newer:
 
 ```bash

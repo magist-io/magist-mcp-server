@@ -3,14 +3,7 @@
   "mcpServers": {
     "magist": {
       "type": "streamable-http",
-      "url": "https://magist.io/api/mcp",
-      "extensions": {
-        "com.openai": {
-          "auth": {
-            "type": "none"
-          }
-        }
-      }
+      "url": "https://magist.io/api/mcp"
     }
   }
 }
