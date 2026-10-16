@@ -1,0 +1,31 @@
+name: Publish exact MCP Registry version
+on:
+  workflow_dispatch:
+    inputs:
+      reviewed_sha:
+        description: Exact reviewed main commit SHA (40 lowercase hex characters)
+        type: string
+        required: true
+permissions: {}
+concurrency:
+  group: magist-registry-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'magist-io/magist-mcp-server' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Run isolated publication safety tests
+        run: python3 -B tests/registry-publish.test.py
+      - name: Verify dispatch and publish once with ephemeral OIDC
+        env:
+          REVIEWED_SHA: ${{ inputs.reviewed_sha }}
+        run: python3 scripts/publish-registry.py
