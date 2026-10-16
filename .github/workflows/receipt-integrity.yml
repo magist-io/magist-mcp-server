@@ -1,0 +1,47 @@
+name: Offline receipt integrity
+
+on:
+  pull_request:
+    paths:
+      - tools/receipt-integrity-v9.mjs
+      - tests/receipt-integrity-v9.test.mjs
+      - tests/fixtures/receipt-v9-synthetic.json
+      - docs/receipt-integrity.md
+      - README.md
+      - .github/workflows/receipt-integrity.yml
+  push:
+    branches: [main]
+    paths:
+      - tools/receipt-integrity-v9.mjs
+      - tests/receipt-integrity-v9.test.mjs
+      - tests/fixtures/receipt-v9-synthetic.json
+      - docs/receipt-integrity.md
+      - README.md
+      - .github/workflows/receipt-integrity.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: receipt-integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        node: [18, 24]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Record exact checkout and run isolated synthetic tests
+        run: |
+          git log -1 --format='%H %T %P'
+          node --version
+          node tests/receipt-integrity-v9.test.mjs

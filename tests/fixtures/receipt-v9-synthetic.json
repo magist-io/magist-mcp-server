@@ -1,0 +1,46 @@
+{
+  "fixtureOnly": true,
+  "receiptVersion": 9,
+  "engineVersion": "synthetic-unit-fixture-not-an-engine-run",
+  "scoringVersion": 1,
+  "corpusVersion": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "corpus": {
+    "regulationCount": 2,
+    "jurisdictionCount": 1
+  },
+  "generatedAt": "2000-01-01T00:00:00Z",
+  "inputs": {
+    "features": [
+      "synthetic-feature"
+    ],
+    "markets": [
+      "synthetic-market"
+    ],
+    "ageGroups": [
+      "18-plus"
+    ],
+    "platforms": [],
+    "qualifications": [],
+    "includeProposed": false
+  },
+  "scope": {
+    "regulationsInScope": [
+      "synthetic-regulation-a",
+      "synthetic-regulation-b"
+    ],
+    "controlsInScope": [
+      "synthetic-control-a",
+      "synthetic-control-b"
+    ]
+  },
+  "outputs": {
+    "controlCount": 2,
+    "totalObligations": 2,
+    "complexityScore": 1.25,
+    "complexityLabel": "fixture-only"
+  },
+  "gates": {
+    "embargo": false
+  },
+  "hash": "d52e673d841355da615c18bb992c7065449a903278adffbea872ef405eb473bd"
+}
