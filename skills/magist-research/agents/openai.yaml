@@ -1,0 +1,7 @@
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "magist"
+      description: "Cited regulatory research and deterministic product scoping"
+      transport: "streamable_http"
+      url: "https://magist.io/api/mcp"

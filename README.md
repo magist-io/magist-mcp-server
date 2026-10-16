@@ -11,6 +11,38 @@ This package is a thin **stdio bridge** to the hosted server at
 `https://magist.io/api/mcp`. Remote-capable hosts can skip it and point straight
 at that URL.
 
+## Portable research plugin (proposed)
+
+This repository also contains the separate **magist-research 0.1.0** portable
+plugin: root `plugin.json`, the remote connection in `mcp.json`, and a newly
+authored workflow in `skills/magist-research/`. It connects directly to the
+public HTTPS service and does not run the npm stdio bridge.
+
+The portable connection uses only `type` and `url`, as allowed by the
+[Agent Plugins 1.0.0 MCP schema](https://agent-plugins.org/schemas/1.0.0/mcp.schema.json).
+The endpoint requires no authentication. The schema does not admit the
+server-level authentication extensions shown in some host-specific examples;
+those extensions are omitted here. Schema validation alone does not establish
+that a host can install and run the complete plugin.
+
+Create its bounded source package with Python 3.9 or newer:
+
+```bash
+python3 scripts/package-plugin.py --output /absolute/new/path/magist-research-0.1.0.zip
+```
+
+The ZIP includes only the two portable manifests, the skill and its MCP
+dependency declaration, and this repository's existing MIT license. It excludes
+the bridge executable, dependencies, private platform source and assets. The
+plugin version is independent of `@magist/mcp-server@0.1.1`.
+
+This is a proposed integration package, not an accepted directory listing or a
+host validation certificate. Public submission uses OpenAI's
+[With MCP route](https://developers.openai.com/plugins/deploy/submission);
+publisher verification, actual host/reviewer cases, media, any required visual
+assets, connection checks and submission review remain separate requirements.
+See the [portable package format](https://developers.openai.com/plugins/build/plugins).
+
 > **Beta: content under attorney review.** The server is live and the engine is
 > stable; substantive attorney review of the regulation corpus is in progress.
 > Entries carry a `contentReviewStatus` field (`reviewed` is human-verified,
@@ -81,7 +113,7 @@ no-such-tool error.
 | --- | --- |
 | `lookup_regulation(id)` | One regulation's structured record: citation, jurisdiction, status, review dates, plain-language summary, and the Controls that may satisfy it. |
 | `search_regulations(query, filters?)` | Deterministic keyword + filter search over the corpus, with permanent citation URLs. |
-| `compute_requirements(features, markets, audiences, businessModel?)` | Runs the deterministic engine: triggered regulations + Controls, complexity tier, blocker count, per-audience breakdown. Same inputs produce the same outputs. |
+| `compute_requirements(features, markets, audiences, businessModel?)` | Runs the deterministic engine: triggered regulations + Controls, complexity tier, blocker count, per-audience breakdown. Creates or refreshes an idempotent public receipt-report link retained for up to 90 days; use only nonconfidential public or synthetic inputs. |
 | `find_controls(regulationId)` | Controls that may satisfy a regulation, each with a priority signal and summary. |
 | `find_vendors(controlId, jurisdiction?)` | Vendors and in-house approaches that implement a Control, with effort/cost and a source disclosure. Magist does not accept payment from vendors. |
 | `get_enforcement(regulationId?, since?, limit?)` | Recent enforcement actions with penalties, authorities, and primary-source links. |
@@ -89,8 +121,11 @@ no-such-tool error.
 | `list_feature_catalog()` | The closed feature, market, and audience identifiers accepted by `compute_requirements`, so agents can validate inputs before analysis. |
 | `verify_ai_answer(token)` | Verifies a signed Magist grounding-proof token from the REST API. It proves what Magist served, not legal correctness or applicability. |
 
-Read-only tools are free, unlimited, and unauthenticated; the per-IP rate limit
-is abuse-prevention only.
+Eight tools read the public corpus or verify a grounding-proof signature.
+`compute_requirements` additionally persists the public receipt report described
+above. Access is unauthenticated and subject to server rate limits; do not send
+personal, confidential or privileged information. Tool-call telemetry may be
+recorded. The bridge package license does not license the hosted platform.
 
 ## Self-hosting
 

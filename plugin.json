@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "magist-research",
+  "version": "0.1.0",
+  "description": "Cited regulatory research and product scoping with Magist's deterministic MCP tools.",
+  "homepage": "https://magist.io/mcp",
+  "repository": "https://github.com/magist-io/magist-mcp-server",
+  "license": "MIT"
+}
