@@ -13,6 +13,7 @@ import zipfile
 
 FILES = (
     'LICENSE',
+    'assets/magist-icon.png',
     'mcp.json',
     'plugin.json',
     'skills/magist-research/SKILL.md',
@@ -31,7 +32,7 @@ def package(root, output):
         payloads[name] = path.read_bytes()
     plugin = json.loads(payloads['plugin.json'])
     mcp = json.loads(payloads['mcp.json'])
-    if plugin.get('name') != 'magist-research' or plugin.get('version') != '0.1.0':
+    if plugin.get('name') != 'magist-research' or plugin.get('version') != '0.1.1':
         raise ValueError('Unexpected plugin identity; review packaging on a release change')
     if plugin.get('license') != 'MIT':
         raise ValueError('Unexpected package license')

@@ -1,0 +1,26 @@
+{
+  "manifest_version": "0.3",
+  "name": "magist-research-desktop",
+  "display_name": "Magist Research",
+  "version": "0.1.1",
+  "description": "Cited regulatory research through the Magist public MCP service. Legal information, not legal advice.",
+  "long_description": "A dependency-free Node.js stdio bridge to https://magist.io/api/mcp. All tool arguments go to Magist and may generate telemetry. Use only public or synthetic inputs. compute_requirements creates or refreshes a public report link retained for up to 90 days. Requires Node.js 18 or later supplied by the host or installed locally. No API key, npm install or package download is needed. This unsigned preview is not directory-approved.",
+  "author": { "name": "Magist LLC", "url": "https://magist.io" },
+  "repository": { "type": "git", "url": "https://github.com/magist-io/magist-mcp-server" },
+  "homepage": "https://magist.io/mcp",
+  "documentation": "https://magist.io/mcp",
+  "support": "https://github.com/magist-io/magist-mcp-server/issues",
+  "license": "MIT",
+  "privacy_policies": ["https://magist.io/privacy"],
+  "server": {
+    "type": "node",
+    "entry_point": "server/bridge.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/bridge.mjs"],
+      "env": { "MAGIST_MCP_URL": "https://magist.io/api/mcp" }
+    }
+  },
+  "compatibility": { "runtimes": { "node": ">=18" } },
+  "tools_generated": true
+}

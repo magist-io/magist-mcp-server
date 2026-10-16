@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "magist": {
+      "type": "http",
+      "url": "https://magist.io/api/mcp"
+    }
+  }
+}
