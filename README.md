@@ -11,6 +11,10 @@ This package is a thin **stdio bridge** to the hosted server at
 `https://magist.io/api/mcp`. Remote-capable hosts can skip it and point straight
 at that URL.
 
+## Offline receipt integrity
+
+The separate [receipt-v9 content-integrity utility](docs/receipt-integrity.md) checks a saved JSON body hash using only Node built-ins. It makes no network call and does not run the engine or authenticate the sender. Its synthetic tests and source are separate from the published bridge and plugin payloads.
+
 ## Research plugin packages (experimental previews)
 
 This repository also contains the separate **magist-research 0.1.1** portable
