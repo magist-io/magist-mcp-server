@@ -11,9 +11,9 @@ This package is a thin **stdio bridge** to the hosted server at
 `https://magist.io/api/mcp`. Remote-capable hosts can skip it and point straight
 at that URL.
 
-## Portable research plugin (proposed)
+## Research plugin packages (experimental previews)
 
-This repository also contains the separate **magist-research 0.1.0** portable
+This repository also contains the separate **magist-research 0.1.1** portable
 plugin: root `plugin.json`, the remote connection in `mcp.json`, and a newly
 authored workflow in `skills/magist-research/`. It connects directly to the
 public HTTPS service and does not run the npm stdio bridge.
@@ -28,11 +28,11 @@ that a host can install and run the complete plugin.
 Create its bounded source package with Python 3.9 or newer:
 
 ```bash
-python3 scripts/package-plugin.py --output /absolute/new/path/magist-research-0.1.0.zip
+python3 scripts/package-plugin.py --output /absolute/new/path/magist-research-0.1.1.zip
 ```
 
-The ZIP includes only the two portable manifests, the skill and its MCP
-dependency declaration, and this repository's existing MIT license. It excludes
+The ZIP includes the two portable manifests, the skill and its MCP
+dependency declaration, an existing public Magist icon, and this repository's MIT license. It excludes
 the bridge executable, dependencies, private platform source and assets. The
 plugin version is independent of `@magist/mcp-server@0.1.1`.
 
@@ -42,6 +42,33 @@ host validation certificate. Public submission uses OpenAI's
 publisher verification, actual host/reviewer cases, media, any required visual
 assets, connection checks and submission review remain separate requirements.
 See the [portable package format](https://developers.openai.com/plugins/build/plugins).
+
+OpenAI listing metadata and five positive/three negative reviewer scenarios
+are included in `plugin.json`. Those are proposed host cases, not records of
+completed installed-plugin runs. A reviewer video is not yet supplied; the
+website demo is not an installed-plugin walkthrough.
+
+### Claude plugin and optional Desktop bundle
+
+The Claude plugin lives at `integrations/claude`. It uses Claude's separate
+`.claude-plugin/plugin.json` and `.mcp.json` format, reuses the exact reviewed
+public research skill, and connects to the same hosted endpoint. Its clean
+subfolder excludes this repository's top-level `bin/`, which chat and Cowork
+do not accept in a plugin. Build both artifacts without installing dependencies:
+
+```bash
+python3 scripts/package-claude.py --kind plugin --output /absolute/new/path/magist-claude-plugin-0.1.0.zip
+python3 scripts/package-claude.py --kind desktop --output /absolute/new/path/magist-desktop-0.1.1.mcpb
+```
+
+The `.mcpb` embeds the exact dependency-free published 0.1.1 bridge and requires
+Node.js 18 or newer. It is unsigned and for private Desktop testing. Claude's
+current directory no longer accepts Desktop MCPB listings. For public review,
+submit the remote MCP connector and the `integrations/claude` plugin folder as
+two linked submissions from the same intended publisher organization. See
+[Claude's current directory routes](https://claude.com/docs/directory/publish).
+No package here implies installation, portal validation, acceptance or a
+completed Claude workflow.
 
 > **Beta: content under attorney review.** The server is live and the engine is
 > stable; substantive attorney review of the regulation corpus is in progress.

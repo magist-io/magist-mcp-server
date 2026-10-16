@@ -31,11 +31,18 @@ class PluginPackageTests(unittest.TestCase):
         module.package(self.source, b)
         self.assertEqual(a.read_bytes(), b.read_bytes())
         with zipfile.ZipFile(a) as archive:
-            self.assertEqual(len(archive.namelist()), 5)
+            self.assertEqual(len(archive.namelist()), 6)
             self.assertIn('plugin.json', archive.namelist())
             self.assertIn('skills/magist-research/SKILL.md', archive.namelist())
             self.assertFalse(any(name.startswith(('.', 'bin/')) for name in archive.namelist()))
             self.assertEqual(archive.read('LICENSE'), (ROOT / 'LICENSE').read_bytes())
+            manifest = json.loads(archive.read('plugin.json'))
+            metadata = manifest['extensions']['com.openai']
+            self.assertEqual(len(metadata['review']['test_cases']['positive']), 5)
+            self.assertEqual(len(metadata['review']['test_cases']['negative']), 3)
+            for key in ['logo', 'composerIcon']:
+                self.assertIn(metadata['interface'][key].removeprefix('./'), archive.namelist())
+            self.assertNotIn('demo_recording_url', metadata['review'])
     def test_rejects_symlink_and_missing_skill(self):
         p = self.source / 'skills/magist-research/SKILL.md'
         p.unlink()
