@@ -62,3 +62,55 @@ service. On an invalid-input error, correct inputs from the advertised schema
 or catalog; on an access or rate-limit refusal, preserve it without switching
 accounts or bypassing controls. Report unavailable evidence instead of filling
 gaps from model memory.
+
+## Response template
+
+Keep the research result separate from the decision the user or counsel needs
+to make. For a lookup, use this structure, populated from the actual response:
+
+1. Research scope and the returned regulation title and citation identifier.
+2. The returned Magist reference and primary-source links, with missing or
+   conflicting evidence identified rather than filled in.
+3. The returned verification state, attribution, dates and material warnings.
+4. Unresolved facts and concrete questions for licensed counsel, without
+   deciding product applicability or asserting that a Control is implemented.
+5. The actual returned `disclaimer.text`, copied verbatim rather than replaced
+   with a stored example disclaimer.
+
+## Worked lookup example
+
+**Illustrative format, not an executed Claude-host result.** The title and
+citation below come from a captured public `lookup_regulation` protocol result;
+the example does not establish current law, current review status or host QA.
+Replace bracketed items using the response to the actual request.
+
+**User input:** "Find the GDPR reference and its source links. Do not assess
+whether my product complies."
+
+**Research step:** Use the known catalog identifier with
+`lookup_regulation({"id":"gdpr"})`. If the identifier is not known, discover
+it with `search_regulations` first. This lookup does not require
+`compute_requirements` or creation of a public report.
+
+**Expected response shape:**
+
+> Research scope: GDPR reference lookup; product applicability not assessed.
+>
+> Reference: General Data Protection Regulation, `MGST-R-gdpr`.
+> Magist reference in the captured result: https://magist.io/r/gdpr
+>
+> Primary sources: [the actual returned source links; identify any missing
+> or inaccessible evidence].
+>
+> Review and attribution: [the actual `verification` state, relevant dates
+> and `practitioner` attribution; do not imply independent credential checks
+> or individual attorney review that the response does not record].
+>
+> Open question for counsel: Which provisions are relevant given the actual
+> processing, people and jurisdictions involved? This lookup does not answer
+> that product-specific question.
+>
+> [Copy the actual response's `disclaimer.text` verbatim here.]
+
+If the lookup fails or is refused, report the missing evidence and preserve
+the refusal. Do not present this example as a successful fallback response.

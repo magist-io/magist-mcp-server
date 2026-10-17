@@ -55,13 +55,16 @@ website demo is not an installed-plugin walkthrough.
 ### Claude plugin and optional Desktop bundle
 
 The Claude plugin lives at `integrations/claude`. It uses Claude's separate
-`.claude-plugin/plugin.json` and `.mcp.json` format, reuses the exact reviewed
-public research skill, and connects to the same hosted endpoint. Its clean
+`.claude-plugin/plugin.json` and `.mcp.json` format, pins its reviewed Claude
+skill bytes, and connects to the same hosted endpoint. Version 0.1.1 adds an
+illustrative lookup and response template; it does not establish formal Legal
+Builder Hub QA or installed-host behavior. The shared OpenAI skill and optional
+Desktop bundle remain separate, unchanged artifacts. Its clean
 subfolder excludes this repository's top-level `bin/`, which chat and Cowork
 do not accept in a plugin. Build both artifacts without installing dependencies:
 
 ```bash
-python3 scripts/package-claude.py --kind plugin --output /absolute/new/path/magist-claude-plugin-0.1.0.zip
+python3 scripts/package-claude.py --kind plugin --output /absolute/new/path/magist-claude-plugin-0.1.1.zip
 python3 scripts/package-claude.py --kind desktop --output /absolute/new/path/magist-desktop-0.1.1.mcpb
 ```
 
