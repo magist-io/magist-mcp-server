@@ -54,6 +54,14 @@ attest to private provider agreements.
 
 ## Status and license
 
+Version 0.1.1 adds a response template and an illustrative worked lookup for
+the Legal Builder Hub's example-preparation criterion. The example uses a
+public law identifier, does not create a report, and is not an executed host
+result. It does not establish a current framework QA verdict. The older QA
+assessment of the separate full `magist.skill` package does not qualify this
+compact plugin's different bytes. The OpenAI and Desktop packages are separate
+artifacts; their versions and contents are unchanged by this update.
+
 Experimental package for installed-host testing. It has not been accepted into
 the Claude directory. Local package checks, MCP protocol tests and directory
 review are separate. Submit the remote MCP connector and this plugin folder

@@ -1,7 +1,7 @@
 {
   "name": "magist-research",
   "displayName": "Magist Research",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cited regulatory research and product scoping with Magist's deterministic MCP tools. Legal information for research and attorney handoff, not legal advice.",
   "author": { "name": "Magist LLC", "url": "https://magist.io" },
   "homepage": "https://magist.io/mcp",

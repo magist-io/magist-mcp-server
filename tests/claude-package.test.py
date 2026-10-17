@@ -21,7 +21,7 @@ class ClaudePackageTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory(prefix='magist-claude-package-')
         self.work = Path(self.tmp.name)
         self.source = self.work / 'source'
-        names = ['LICENSE', 'bin/magist-mcp-server.js', 'skills/magist-research/SKILL.md',
+        names = ['LICENSE', 'bin/magist-mcp-server.js',
                  'integrations/claude-desktop/manifest.json', 'integrations/claude-desktop/README.md']
         names += [module.PLUGIN + '/' + n for n in module.PLUGIN_FILES]
         for n in names:
@@ -45,6 +45,7 @@ class ClaudePackageTests(unittest.TestCase):
                 self.assertNotIn('bin/magist-mcp-server.js', archive.namelist())
                 if kind == 'plugin':
                     self.assertNotIn('server/bridge.mjs', archive.namelist())
+                    self.assertEqual(json.loads(archive.read('.claude-plugin/plugin.json'))['version'], '0.1.1')
 
     def test_cannot_overwrite_output_or_output_symlink(self):
         p = self.work / 'keep'
@@ -64,10 +65,19 @@ class ClaudePackageTests(unittest.TestCase):
 
     def test_rejects_skill_drift_and_license_drift(self):
         p = self.source / module.PLUGIN / 'skills/magist-research/SKILL.md'
-        p.write_text('unreviewed drift')
+        reviewed = p.read_bytes()
+        # A fabricated success claim in the example must not enter an archive.
+        p.write_bytes(reviewed.replace(b'not an executed Claude-host result', b'an executed Claude-host result'))
         with self.assertRaises(ValueError): module.payloads(self.source, 'plugin')
-        p.write_bytes((ROOT / 'skills/magist-research/SKILL.md').read_bytes())
+        p.write_bytes(reviewed)
         (self.source / module.PLUGIN / 'LICENSE').write_text('a different grant')
+        with self.assertRaises(ValueError): module.payloads(self.source, 'plugin')
+
+    def test_rejects_old_version_on_new_claude_content(self):
+        p = self.source / module.PLUGIN / '.claude-plugin/plugin.json'
+        manifest = json.loads(p.read_text())
+        manifest['version'] = '0.1.0'
+        p.write_text(json.dumps(manifest))
         with self.assertRaises(ValueError): module.payloads(self.source, 'plugin')
 
     def test_rejects_changed_endpoint_bridge_or_desktop_launcher(self):
