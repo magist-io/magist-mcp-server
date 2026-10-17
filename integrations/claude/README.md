@@ -54,13 +54,20 @@ attest to private provider agreements.
 
 ## Status and license
 
-Version 0.1.1 adds a response template and an illustrative worked lookup for
-the Legal Builder Hub's example-preparation criterion. The example uses a
-public law identifier, does not create a report, and is not an executed host
-result. It does not establish a current framework QA verdict. The older QA
-assessment of the separate full `magist.skill` package does not qualify this
-compact plugin's different bytes. The OpenAI and Desktop packages are separate
-artifacts; their versions and contents are unchanged by this update.
+Version 0.1.2 adds an explicit research audience, bounded transactional work
+shape, evidence-confidence bands and escalation paths. These address design
+gaps found in a static assessment of 0.1.1 against the Legal Skill Design
+Framework. Evidence confidence describes source support, not legal certainty
+or a model probability. The earlier response template and illustrative lookup
+remain; the example is not an executed host result.
+
+These written controls are distinct from actual host permissions. The package
+does not enforce a host tool allowlist, and this update adds no permission
+fields, tools, endpoints or effects. Actual practice-profile suitability,
+installed-skill conflicts, allowlist state, piloting and installer trust
+checks remain separate. Neither this update nor the older QA of the different
+full `magist.skill` package establishes unconditional framework readiness for
+this compact plugin. OpenAI and Desktop package bytes are unchanged.
 
 Experimental package for installed-host testing. It has not been accepted into
 the Claude directory. Local package checks, MCP protocol tests and directory

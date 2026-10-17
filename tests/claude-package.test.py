@@ -45,7 +45,7 @@ class ClaudePackageTests(unittest.TestCase):
                 self.assertNotIn('bin/magist-mcp-server.js', archive.namelist())
                 if kind == 'plugin':
                     self.assertNotIn('server/bridge.mjs', archive.namelist())
-                    self.assertEqual(json.loads(archive.read('.claude-plugin/plugin.json'))['version'], '0.1.1')
+                    self.assertEqual(json.loads(archive.read('.claude-plugin/plugin.json'))['version'], '0.1.2')
 
     def test_cannot_overwrite_output_or_output_symlink(self):
         p = self.work / 'keep'
@@ -76,7 +76,7 @@ class ClaudePackageTests(unittest.TestCase):
     def test_rejects_old_version_on_new_claude_content(self):
         p = self.source / module.PLUGIN / '.claude-plugin/plugin.json'
         manifest = json.loads(p.read_text())
-        manifest['version'] = '0.1.0'
+        manifest['version'] = '0.1.1'
         p.write_text(json.dumps(manifest))
         with self.assertRaises(ValueError): module.payloads(self.source, 'plugin')
 

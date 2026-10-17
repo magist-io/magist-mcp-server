@@ -10,7 +10,7 @@ PLUGIN = 'integrations/claude'
 BRIDGE_SHA256 = '6a1a51030fbebc3816319fea2f1efaa7a351bd7abba3dc7b864fe5b450524621'
 # Claude and OpenAI skills have separate versions. Updating this byte-integrity
 # boundary requires deliberate content review; the hash is not that review.
-CLAUDE_SKILL_SHA256 = 'f1cc97bcd79e990e529de0ab8b9b11f5051692e3d324b681c1e942ed72da36c6'
+CLAUDE_SKILL_SHA256 = 'ce30f768dbdcb7d5808135d8471a60323d9d57d814c7050bcce4d6ce850e9c40'
 PLUGIN_FILES = ('.claude-plugin/plugin.json', '.mcp.json', 'README.md',
                 'LICENSE', 'skills/magist-research/SKILL.md')
 
@@ -29,7 +29,7 @@ def payloads(root, kind):
     if kind == 'plugin':
         files = {n: read(root, PLUGIN + '/' + n) for n in PLUGIN_FILES}
         manifest = json.loads(files['.claude-plugin/plugin.json'])
-        if manifest.get('name') != 'magist-research' or manifest.get('version') != '0.1.1':
+        if manifest.get('name') != 'magist-research' or manifest.get('version') != '0.1.2':
             raise ValueError('Unexpected Claude plugin identity')
         if json.loads(files['.mcp.json']) != {'mcpServers': {'magist': {
                 'type': 'http', 'url': 'https://magist.io/api/mcp'}}}:

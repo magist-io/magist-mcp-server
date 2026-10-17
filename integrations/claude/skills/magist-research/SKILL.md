@@ -14,6 +14,19 @@ names, catalog IDs and nonconfidential research questions instead of private
 product narratives. If useful research cannot be separated from private facts,
 explain that limitation without sending those facts.
 
+## Audience and work shape
+
+This skill supports product-team researchers and counsel preparing preliminary
+cited research. It assumes users can review source links and confirm product
+facts, not that they are lawyers or experienced AI users. Explain catalog
+choices plainly; leave legal determinations with licensed counsel.
+
+The dominant work shape is **bounded transactional research**: a named lookup
+or a structured scoping question with stated inputs, visible evidence and a
+clear handoff. This is not confidential matter stewardship, legal strategy,
+representation or autonomous selection of a legal position. More conversation
+context does not expand that delegation threshold.
+
 ## Choose the research path
 
 - For a named law, discover its ID with `search_regulations` when necessary,
@@ -40,6 +53,33 @@ explain that limitation without sending those facts.
   tokens. A valid signature proves what Magist served, not legal correctness
   or applicability. If no token exists, say verification is unavailable;
   never construct a token or present `valid:false` as successful verification.
+
+## Evidence confidence and escalation
+
+Use these bands to describe support for the bounded research, never confidence
+in legal applicability, compliance, a prediction or a model-generated score.
+They do not replace the returned verification status or Regulatory Complexity.
+
+- **High:** the requested public records, relevant source support and material
+  inputs are available without an unresolved conflict affecting the answer.
+  Proceed with the cited research and its limitations; do not conclude that a
+  law applies or a product complies.
+- **Medium:** useful evidence exists, but a material input, source conflict or
+  freshness question remains. Identify the gap and why it matters. Ask only
+  for missing nonconfidential facts, or offer bounded read-only research that
+  does not depend on the unresolved fact. Do not compute with guessed inputs.
+- **Low:** necessary support is missing, inaccessible, refused or unverifiable.
+  State what is unavailable and stop the unsupported conclusion or mapping.
+  Offer available cited research and concrete questions for licensed counsel;
+  do not fill the gap from model memory or treat silence as no obligation.
+
+Escalate explicitly when a jurisdiction or feature is unsupported, sources or
+returned statuses conflict, a question requires novel legal interpretation,
+or its complexity exceeds a bounded lookup or structured scoping task. Explain
+the limit and separate any supported research from the decision to hand back.
+For legal judgment, hand back to counsel; for missing public facts, clarify
+before using them. Keep private facts out of remote calls, preserve access
+refusals, and honor a public-report refusal without asking again.
 
 ## Present the evidence
 
@@ -72,9 +112,11 @@ to make. For a lookup, use this structure, populated from the actual response:
 2. The returned Magist reference and primary-source links, with missing or
    conflicting evidence identified rather than filled in.
 3. The returned verification state, attribution, dates and material warnings.
-4. Unresolved facts and concrete questions for licensed counsel, without
+4. The evidence-confidence band, its supporting facts and its limitations;
+   never present it as a legal determination or replace the returned status.
+5. Unresolved facts and concrete questions for licensed counsel, without
    deciding product applicability or asserting that a Control is implemented.
-5. The actual returned `disclaimer.text`, copied verbatim rather than replaced
+6. The actual returned `disclaimer.text`, copied verbatim rather than replaced
    with a stored example disclaimer.
 
 ## Worked lookup example
@@ -105,6 +147,9 @@ it with `search_regulations` first. This lookup does not require
 > Review and attribution: [the actual `verification` state, relevant dates
 > and `practitioner` attribution; do not imply independent credential checks
 > or individual attorney review that the response does not record].
+>
+> Evidence confidence: [high, medium or low based on actual evidence support;
+> explain any missing input, conflict or freshness limit, not legal certainty].
 >
 > Open question for counsel: Which provisions are relevant given the actual
 > processing, people and jurisdictions involved? This lookup does not answer
